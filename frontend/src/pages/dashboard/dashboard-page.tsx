@@ -6,9 +6,11 @@ import {
   Eye,
   ListFilter,
   LogOut,
+  Plus,
   RefreshCcw,
   Save,
   Send,
+  X,
   XCircle,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -68,6 +70,7 @@ export const DashboardPage = () => {
   const [description, setDescription] = useState('')
   const [status, setStatus] = useState<ApplicationStatus>('new')
   const [isCreating, setIsCreating] = useState(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingStatus, setEditingStatus] = useState<ApplicationStatus>('new')
@@ -164,6 +167,7 @@ export const DashboardPage = () => {
       setTitle('')
       setDescription('')
       setStatus('new')
+      setIsCreateModalOpen(false)
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -305,6 +309,10 @@ export const DashboardPage = () => {
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
+                <Button size="sm" onClick={() => setIsCreateModalOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  New application
+                </Button>
                 <Button variant="outline" size="sm" onClick={() => void loadApplications()}>
                   <RefreshCcw className="mr-2 h-4 w-4" />
                   Refresh
@@ -352,63 +360,7 @@ export const DashboardPage = () => {
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
-          <Card className="h-fit border-slate-300 bg-white/95">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl">Create application</CardTitle>
-              <p className="text-sm text-slate-500">
-                Add a new application and assign its initial workflow status.
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Application title</Label>
-                <Input
-                  id="title"
-                  placeholder="e.g. Strategic partnership request"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Describe business context, owner, and key notes..."
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="status">Initial status</Label>
-                <Select
-                  id="status"
-                  value={status}
-                  onChange={(event) =>
-                    setStatus(event.target.value as ApplicationStatus)
-                  }
-                >
-                  {statusOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-
-              <Button
-                className="w-full"
-                onClick={handleCreate}
-                disabled={!canCreate || isCreating}
-              >
-                <Send className="mr-2 h-4 w-4" />
-                {isCreating ? 'Creating...' : 'Create application'}
-              </Button>
-            </CardContent>
-          </Card>
-
+        <div className="grid gap-6">
           <Card className="border-slate-300 bg-white/95">
             <CardHeader className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -500,6 +452,88 @@ export const DashboardPage = () => {
           </Card>
         </div>
       </div>
+
+      {isCreateModalOpen ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/55 px-4 py-6"
+          onClick={() => setIsCreateModalOpen(false)}
+        >
+          <Card
+            className="w-full max-w-xl border-slate-300 bg-white"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <CardTitle className="text-xl">Create application</CardTitle>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Add a new application and assign its initial workflow status.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setIsCreateModalOpen(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="modal-title">Application title</Label>
+                <Input
+                  id="modal-title"
+                  placeholder="e.g. Strategic partnership request"
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="modal-description">Description</Label>
+                <Textarea
+                  id="modal-description"
+                  placeholder="Describe business context, owner, and key notes..."
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="modal-status">Initial status</Label>
+                <Select
+                  id="modal-status"
+                  value={status}
+                  onChange={(event) =>
+                    setStatus(event.target.value as ApplicationStatus)
+                  }
+                >
+                  {statusOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsCreateModalOpen(false)}
+                  disabled={isCreating}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={handleCreate} disabled={!canCreate || isCreating}>
+                  <Send className="mr-2 h-4 w-4" />
+                  {isCreating ? 'Creating...' : 'Create application'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : null}
     </main>
   )
 }

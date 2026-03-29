@@ -16,7 +16,7 @@ export const LoginPage = () => {
   const [error, setError] = useState('')
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -25,7 +25,7 @@ export const LoginPage = () => {
 
     try {
       await login({ email, password })
-      navigate(location.state?.from || '/', { replace: true })
+      navigate(location.state?.from || '/dashboard', { replace: true })
     } catch (requestError) {
       setError(
         requestError instanceof Error

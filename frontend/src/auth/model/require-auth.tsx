@@ -11,7 +11,7 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
       <Navigate
         to="/auth/login"
         replace
-        state={{ from: location.pathname || '/' }}
+        state={{ from: location.pathname || '/dashboard' }}
       />
     )
   }

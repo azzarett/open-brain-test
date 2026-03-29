@@ -10,14 +10,15 @@ export const AppRouter = () => {
       <Routes>
         <Route path="/auth/login" element={<LoginPage />} />
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <RequireAuth>
               <DashboardPage />
             </RequireAuth>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </AuthProvider>
   )

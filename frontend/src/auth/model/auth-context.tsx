@@ -1,5 +1,6 @@
 import {
   useCallback,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -7,6 +8,7 @@ import {
 import {
   signIn,
   signOut,
+  type SignInPayload,
 } from "../api/auth.api";
 import { authStorage } from "./auth-storage";
 import { AuthContext } from "./auth-context-instance";
@@ -16,7 +18,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState(authStorage.getUser());
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = useCallback(async (payload: { email: string; password: string }) => {
+  useEffect(() => {
+    if ((token && !user) || (!token && user)) {
+      authStorage.clear();
+      setToken(null);
+      setUser(null);
+    }
+  }, [token, user]);
+
+  const login = useCallback(async (payload: SignInPayload) => {
     setIsLoading(true);
     try {
       const authResult = await signIn(payload);
@@ -43,7 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       token,
       user,
-      isAuthenticated: Boolean(token),
+      isAuthenticated: Boolean(token && user),
       isLoading,
       login,
       logout,

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from '../auth/model/auth-context'
 import { RequireAuth } from '../auth/model/require-auth'
 import { LoginPage } from '../pages/auth/login-page'
+import { ApplicationDetailsPage } from '../pages/applications/application-details-page'
 import { DashboardPage } from '../pages/dashboard/dashboard-page'
 
 export const AppRouter = () => {
@@ -14,6 +15,14 @@ export const AppRouter = () => {
           element={
             <RequireAuth>
               <DashboardPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/applications/:applicationId"
+          element={
+            <RequireAuth>
+              <ApplicationDetailsPage />
             </RequireAuth>
           }
         />

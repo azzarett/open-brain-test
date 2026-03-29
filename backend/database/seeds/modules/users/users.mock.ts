@@ -1,9 +1,9 @@
 export const users = [
-	{
-		id: '00000000-0000-0000-0000-000000000001',
-		email: 'admin@openbrain.test',
-		password: 'Password123!',
-		firstName: 'OpenBrain',
-		lastName: 'Admin',
-	},
+  {
+    id: '026e002d-f1c9-44fa-92c8-c3bf13cb6e35',
+    email: 'admin@openbrain.test',
+    password: 'Password123!',
+    firstName: 'OpenBrain',
+    lastName: 'Admin',
+  },
 ];

@@ -76,6 +76,21 @@ export const getApplications = async (
   )
 }
 
+export const getApplicationById = async (
+  token: string,
+  applicationId: string,
+): Promise<Application> => {
+  const response = await httpClient<ApplicationResponse>(
+    `/v1/applications/${applicationId}`,
+    {
+      method: 'GET',
+      headers: authHeaders(token),
+    },
+  )
+
+  return response.data
+}
+
 export const createApplication = async (
   token: string,
   payload: CreateApplicationPayload,

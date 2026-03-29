@@ -3,6 +3,7 @@ import {
   BriefcaseBusiness,
   CheckCircle2,
   Clock3,
+  Eye,
   ListFilter,
   LogOut,
   RefreshCcw,
@@ -10,6 +11,7 @@ import {
   Send,
   XCircle,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import {
   createApplication,
   getApplications,
@@ -53,6 +55,7 @@ const statusColumnStyles: Record<ApplicationStatus, string> = {
 
 export const DashboardPage = () => {
   const { user, token, logout } = useAuth()
+  const navigate = useNavigate()
 
   const [applications, setApplications] = useState<Application[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -261,13 +264,21 @@ export const DashboardPage = () => {
             </Button>
           </div>
         ) : (
-          <div className="border-t border-slate-200 pt-3">
+          <div className="flex flex-wrap gap-2 border-t border-slate-200 pt-3">
             <Button
               size="sm"
               variant="outline"
               onClick={() => startEditStatus(application)}
             >
               Update status
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate(`/dashboard/applications/${application.id}`)}
+            >
+              <Eye className="mr-2 h-4 w-4" />
+              View details
             </Button>
           </div>
         )}

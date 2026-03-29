@@ -1,0 +1,24 @@
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from '../auth/model/auth-context'
+import { RequireAuth } from '../auth/model/require-auth'
+import { LoginPage } from '../pages/auth/login-page'
+import { DashboardPage } from '../pages/dashboard/dashboard-page'
+
+export const AppRouter = () => {
+  return (
+    <AuthProvider>
+      <Routes>
+        <Route path="/auth/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <DashboardPage />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AuthProvider>
+  )
+}

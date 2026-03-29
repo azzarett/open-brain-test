@@ -1,19 +1,40 @@
 /* eslint-disable no-console */
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import {
+  HttpStatus,
+  UnprocessableEntityException,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AppModule } from './app.module';
+import { ErrorCode } from './common/constants';
+import { GlobalExceptionFilter } from './common/filters';
 import { AppEnvironment, getAppConfig } from './config/app.config';
 
 const bootstrap = async () => {
   const appConfig = getAppConfig();
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       transform: true,
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      exceptionFactory: (validationErrors) => {
+        const details = validationErrors.map((error) => ({
+          field: error.property,
+          constraints: error.constraints,
+        }));
+
+        return new UnprocessableEntityException({
+          error_code: ErrorCode.ValidationFailed,
+          message: 'Validation failed',
+          details,
+        });
+      },
       transformOptions: {
         enableImplicitConversion: true,
       },

@@ -3,7 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppEnvironment, getAppConfig } from './config/app.config';
 import { getDatabaseConfig } from './config/database.config';
 import { daos } from './common/dao';
+import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
+import { UsersModule } from './modules/users/users.module';
 
 const appConfig = getAppConfig();
 const databaseConfig = getDatabaseConfig();
@@ -30,6 +32,8 @@ const databaseConfig = getDatabaseConfig();
       synchronize: false,
     }),
     HealthModule,
+    UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

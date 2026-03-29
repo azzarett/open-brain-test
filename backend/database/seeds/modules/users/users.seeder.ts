@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { hash } from 'bcryptjs';
 import { Repository } from 'typeorm';
 import { UserDao } from 'src/common/dao';
 import { users } from './users.mock';
@@ -12,6 +13,13 @@ export class UsersSeeder {
   ) {}
 
   async run() {
-    await this.usersRepository.insert(users);
+    const preparedUsers = await Promise.all(
+      users.map(async (user) => ({
+        ...user,
+        password: await hash(user.password, 10),
+      })),
+    );
+
+    await this.usersRepository.insert(preparedUsers);
   }
 }

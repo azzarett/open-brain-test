@@ -7,22 +7,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('users')
-export class UserDao {
+@Entity('user_access_tokens')
+export class UserAccessTokenDao {
   @PrimaryColumn({ name: 'id', type: 'uuid' })
   id: string;
 
-  @Column({ name: 'email', type: 'varchar' })
-  email: string;
+  @Column({ name: 'user_id', type: 'uuid' })
+  userId: string;
 
-  @Column({ name: 'password', type: 'varchar' })
-  password: string;
-
-  @Column({ name: 'first_name', type: 'varchar', nullable: true })
-  firstName?: string;
-
-  @Column({ name: 'last_name', type: 'varchar', nullable: true })
-  lastName?: string;
+  @Column({ name: 'token', type: 'text' })
+  token: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: string;
